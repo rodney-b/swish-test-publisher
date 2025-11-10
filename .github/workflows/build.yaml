@@ -6,6 +6,17 @@ on:
       - "main"
   workflow_dispatch:
 
+# OIDC permissions
+permissions:
+  id-token: write 
+  contents: read
+
+env:
+  IAM_ROLE_ARN: "arn:aws:iam::879981263884:role/bumpow-main-github-actions-role"
+  AWS_REGION: "us-east-1"
+  ECR_REPO_URL: "879981263884.dkr.ecr.us-east-1.amazonaws.com/external/work/swish-analytics/swish-test-default"
+  IMAGE_TAG: ${{ github.sha }}
+
 jobs:
   Build:
     runs-on: ubuntu-latest
@@ -31,8 +42,10 @@ jobs:
         with:
           context: .
           push: true
-          # Use the ECR registry URL from the login step's output
-          # Tag the image with the GitHub SHA
-          tags: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+          file: build/package/publisher/Dockerfile
+          platforms: linux/arm64
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          tags: |
+            ${{ env.ECR_REPO_URL }}/my-repo-prefix/${{ env.APP_NAME }}:${{ env.IMAGE_TAG }}
+            ${{ env.ECR_REPO_URL }}/my-repo-prefix/${{ env.APP_NAME }}:latest
