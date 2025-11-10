@@ -15,6 +15,7 @@ env:
   IAM_ROLE_ARN: "arn:aws:iam::879981263884:role/bumpow-main-github-actions-role"
   AWS_REGION: "us-east-1"
   ECR_REPO_URL: "879981263884.dkr.ecr.us-east-1.amazonaws.com/external/work/swish-analytics/swish-test-default"
+  APP_NAME: "publisher"
   IMAGE_TAG: ${{ github.sha }}
 
 jobs:
@@ -47,5 +48,5 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: |
-            ${{ env.ECR_REPO_URL }}/my-repo-prefix/${{ env.APP_NAME }}:${{ env.IMAGE_TAG }}
-            ${{ env.ECR_REPO_URL }}/my-repo-prefix/${{ env.APP_NAME }}:latest
+            ${{ env.ECR_REPO_URL }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAG }}
+            ${{ env.ECR_REPO_URL }}/${{ env.APP_NAME }}:latest
