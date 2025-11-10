@@ -1,0 +1,112 @@
+nameOverride: &name "swish-test-publisher"
+fullnameOverride: *name
+
+image:
+  repository: swish-test-publisher
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+imagePullSecrets: []
+
+stage: production
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: *name
+
+podAnnotations:
+  linkerd.io/inject: "disabled"
+
+podLabels:
+  app.swish-test/publisher: *name
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsGroup: 1000
+  runAsUser: 1000
+  seccompProfile:
+    type: RuntimeDefault
+  capabilities:
+    drop:
+      - ALL
+
+podSecurityContext:
+  fsGroup: 1000
+  fsGroupChangePolicy: "OnRootMismatch"
+
+podSpec:
+  restartPolicy: OnFailure
+
+job:
+  activeDeadlineSeconds: 90
+  backoffLimit: 5
+  completions: 1
+  parallelism: 1
+  ttlSecondsAfterFinished: 30
+
+dataSource:
+  url: minio.swish-analytics.svc.cluster.local:443
+  certIssuer: minio-ca-issuer
+  clientCertSecret: producer-client-tls
+  credentialsSecret: swish-analytics-user
+  bucket: swish-analytics
+  dataSets:
+    one: part=1/format=ndjson/compression=zstd/data-packet-1.ndjson.zst
+    two: part=1/format=ndjson/compression=zstd/data-packet-2.ndjson.zst
+
+messageQueue:
+  clientCertSecret: swishy
+  brokerCertSecret: kafka-broker-tls
+  topics:
+    one: data-set-1
+    two: data-set-2
+  url: swish-analytics-kafka-brokers.swish-analytics.svc.cluster.local:9093
+
+mode: 1
+
+messageRate:
+  one: 5
+  two: 10
+
+otel:
+  stdoutExporterEnabled: false
+  httpReceiverURL: "swishkube-otel-collector.swish-analytics.svc.cluster.local:4318"
+
+resources:
+  limits:
+    memory: 512Mi
+  requests:
+    cpu: 20m
+    memory: 64Mi
+
+# Not very useful for a job, but included for demonstration purposes.
+livenessProbe:
+  grpc:
+    port: 50051
+    service: swish-test-publisher-liveness
+  initialDelaySeconds: 20
+
+# Not bothering to use a readiness probe for a job
+
+# Additional volumes on the output Deployment definition.
+volumes: []
+# - name: foo
+#   secret:
+#     secretName: mysecret
+#     optional: false
+
+# Additional volumeMounts on the output Deployment definition.
+volumeMounts: []
+# - name: foo
+#   mountPath: "/etc/foo"
+#   readOnly: true
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

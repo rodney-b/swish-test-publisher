@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "publisher-chart.name" . }}-client-cert
+spec:
+  commonName: identity.swish-test-publisher.swish-analytics.kluster.lan
+  subject:
+    organizations:
+      - swish-analytics
+  usages:
+    - client auth
+  secretName: {{ .Values.dataSource.clientCertSecret }}
+  issuerRef:
+    name: {{ .Values.dataSource.certIssuer }}

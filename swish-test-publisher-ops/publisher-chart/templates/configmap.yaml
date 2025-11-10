@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "publisher-chart.name" . }}
+  labels:
+    {{- include "publisher-chart.labels" . | nindent 4 }}
+data:
+  {{- with .Values }}
+  APP_NAME: {{ include "publisher-chart.name" $ }}
+  APP_MODE: {{ .mode | quote }}
+  DATA_SET_ONE: {{ .dataSource.dataSets.one }}
+  DATA_SET_TWO: {{ .dataSource.dataSets.two }}
+  DATA_SOURCE_BUCKET: {{ .dataSource.bucket }}
+  DATA_SOURCE_URL: {{ .dataSource.url }}
+  MESSAGE_QUEUE_TOPIC_ONE: {{ .messageQueue.topics.one }}
+  MESSAGE_QUEUE_TOPIC_TWO: {{ .messageQueue.topics.two }}
+  MESSAGE_QUEUE_URL: {{ .messageQueue.url }}
+  MESSAGE_RATE_ONE: {{ .messageRate.one | quote }}
+  MESSAGE_RATE_TWO: {{ .messageRate.two | quote }}
+  OTEL_STDOUT_EXPORTER_ENABLED: {{ .otel.stdoutExporterEnabled | quote }}
+  OTEL_HTTP_RECEIVER_URL: {{ .otel.httpReceiverURL | quote }}
+  HEALTHCHECK_PORT: {{ .livenessProbe.grpc.port | quote }}
+  HEALTHCHECK_SERVICE_PREFIX: {{ include "publisher-chart.name" $ }}
+  STAGE: {{ .stage }}
+  {{- end }}

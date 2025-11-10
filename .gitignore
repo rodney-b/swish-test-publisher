@@ -1,0 +1,30 @@
+# Binaries for programs and plugins
+bin/
+
+# Dependency directories
+vendor/
+node_modules/
+
+# Hidden files
+.*
+!.github
+!.gitignore
+!.gitmodules
+!.dockerignore
+
+# Go dev
+go.work
+go.work.*
+
+# Coverage file
+cover.out
+
+# Custom
+*-secret.yaml
+*-secrets.yaml
+*-secret-*.yaml
+*-secrets-*.yaml
+*.out
+*.lock
+*.tgz
+skaffold.*
