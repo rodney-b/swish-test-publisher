@@ -1,6 +1,6 @@
 FROM golang:latest AS prebuilder
 
-ENV GOARCH=amd64
+ENV GOARCH=arm64
 ENV GOOS=linux
 ENV GOCACHE=/root/.cache/go-build
 ENV GOMODCACHE=/go/pkg/mod
