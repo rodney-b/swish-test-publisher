@@ -27,4 +27,4 @@ cover.out
 *.out
 *.lock
 *.tgz
-skaffold.*
+skaffold.env

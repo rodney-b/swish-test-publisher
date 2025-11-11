@@ -14,3 +14,5 @@ Mode 2: Publishes messages at a rate of 10 messages per second to topic `data-se
 ### Under the hood
 Configuration and deployment of the publisher is done using [Helm charts](https://helm.sh/docs). The mode value is supplied through the environment variable `APP_MODE`, which is set by the `mode` field in the helm chart's values.yaml. This field is what is configured by the Github Actions mode selection.
 
+### Local deployment
+If deploying locally, a skaffold.yaml and env template is provided for convenience. Skaffold overlays [local.values.yaml](swish-test-publisher-ops/publisher-chart/local.values.yaml) over the default [values.yaml](swish-test-publisher-ops/publisher-chart/values.yaml) so any configuration changes to the values file can go here.

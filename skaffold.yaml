@@ -1,0 +1,39 @@
+apiVersion: skaffold/v4beta13
+kind: Config
+metadata:
+  name: publisher
+build:
+  tagPolicy:
+    sha256: {}
+  local:
+    push: true
+    useBuildkit: true
+    concurrency: 1
+  artifacts:
+    - image: swish-test/publisher
+      context: .
+      platforms:
+        - "linux/amd64"
+      docker:
+        dockerfile: build/package/publisher/Dockerfile
+deploy:
+  helm:
+    releases:
+      - name: swish-publisher
+        chartPath: swish-test-publisher-ops/publisher-chart
+        namespace: "{{ .APP_NAMESPACE }}"
+        valuesFiles:
+          - swish-test-publisher-ops/publisher-chart/values.yaml
+          - swish-test-publisher-ops/publisher-chart/local.values.yaml
+        setValueTemplates:
+          image.repository: "{{.IMAGE_REPO_swish_test_publisher}}"
+          image.tag: "{{.IMAGE_TAG_swish_test_publisher}}"
+    flags:
+      upgrade:
+        - --install
+profiles:
+  - name: two
+    patches:
+      - op: add
+        path: /deploy/helm/releases/0/setValueTemplates/mode
+        value: 2
