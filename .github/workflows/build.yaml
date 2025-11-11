@@ -12,9 +12,6 @@ permissions:
   contents: read
 
 env:
-  IAM_ROLE_ARN: "arn:aws:iam::879981263884:role/bumpow-main-github-actions-role"
-  AWS_REGION: "us-east-1"
-  ECR_REPO_URL: "879981263884.dkr.ecr.us-east-1.amazonaws.com/external/work/swish-analytics/swish-test-default"
   APP_NAME: "publisher"
   IMAGE_TAG: ${{ github.sha }}
 
@@ -28,8 +25,8 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ env.IAM_ROLE_ARN }}
-          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -48,5 +45,5 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: |
-            ${{ env.ECR_REPO_URL }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAG }}
-            ${{ env.ECR_REPO_URL }}/${{ env.APP_NAME }}:latest
+            ${{ secrets.IMAGE_REPO }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAG }}
+            ${{ secrets.IMAGE_REPO }}/${{ env.APP_NAME }}:latest
