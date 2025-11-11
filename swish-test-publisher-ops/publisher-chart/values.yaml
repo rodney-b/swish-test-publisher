@@ -107,6 +107,11 @@ volumeMounts: []
 
 nodeSelector: {}
 
-tolerations: []
+# Just so it doesn't have to wait for Karpenter when being tested
+tolerations:
+  - key: "CriticalAddonsOnly"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule"
 
 affinity: {}
