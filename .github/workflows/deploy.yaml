@@ -1,0 +1,45 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Mode 1 publishes data-set-1 at 5 msg/s; Mode 2 publishes data-set-2  at 10 msg/s"
+        required: true
+        default: 1
+        type: choice
+        options: [1, 2]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write   # for OIDC
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: azure/setup-helm@v4
+        with:
+          version: v3.15.2
+
+      - name: AWS creds (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: EKS kubeconfig
+        run: aws eks update-kubeconfig \
+               --name "${{ secrets.EKS_CLUSTER_NAME }}" \
+               --region "${{ secrets.AWS_REGION }}" \
+               --alias eks
+
+      - name: Helm upgrade
+        run: |
+          helm upgrade --install publisher ./swish-test-publisher-ops/publisher-chart \
+            --create-namespace \
+            --namespace swish-analytics \
+            --atomic \
+            --wait \
+            --set mode=${{ github.event.inputs.mode }}
