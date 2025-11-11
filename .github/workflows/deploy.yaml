@@ -37,6 +37,4 @@ jobs:
           helm upgrade --install publisher ./swish-test-publisher-ops/publisher-chart \
             --create-namespace \
             --namespace swish-analytics \
-            --atomic \
-            --wait \
             --set mode=${{ github.event.inputs.mode }}
