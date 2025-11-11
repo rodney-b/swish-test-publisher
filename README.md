@@ -3,7 +3,7 @@
 The publisher streams the data sets from their minio buckets and into kafka.
 
 ### Deployment
-Deployment and mode selection is done through Github Actions. This deploys a job which publishes a data set to its respective kafka topic for 30 seconds and then it ends.
+Deployment and mode selection is done through Github Actions of this repository. This deploys a job which publishes a data set to its respective kafka topic for 30 seconds and then it ends.
 
 ### Modes
 This application runs in 2 modes, 1 and 2.
