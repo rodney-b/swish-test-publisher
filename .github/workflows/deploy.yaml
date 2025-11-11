@@ -39,4 +39,4 @@ jobs:
             --atomic \
             --wait \
             --set mode=${{ github.event.inputs.mode }} \
-            --set image.repository=I"${{ secrets.IMAGE_REPO }}/publisher"
+            --set image.repository="${{ secrets.IMAGE_REPO }}/publisher"
