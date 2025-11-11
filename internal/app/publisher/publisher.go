@@ -79,8 +79,6 @@ func publish(ctx context.Context, cp config.ConfigProvider, minioClient *minio.C
 		return errors.Join(errors.New("error pinging kafka client"), err)
 	}
 
-	log.Debug("message queue", "topic", cp.GetMessageQueueTopic()) // TODO: Remove
-
 	const initBufferCap = 64 * 1024      // 64KiB
 	const maxTokenSize = 2 * 1024 * 1024 // 2MiB
 
@@ -126,8 +124,7 @@ func publish(ctx context.Context, cp config.ConfigProvider, minioClient *minio.C
 
 				tel.IncrementMessageCounter(ctx, cp)
 
-				log.Debug(">>> next", "line", string(lineBytes)) // TODO: Remove
-				// log.Debug(">>> kafka msg", "record", msg.Value) // TODO: Remove
+				log.Info("Producing...", "line", string(lineBytes))
 			}
 
 			if err = scanner.Err(); err != nil {
