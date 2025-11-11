@@ -2,7 +2,7 @@ nameOverride: &name "swish-test-publisher"
 fullnameOverride: *name
 
 image:
-  repository: swish-test-publisher
+  repository: swish-test-default/publisher
   pullPolicy: IfNotPresent
   tag: "latest"
 
