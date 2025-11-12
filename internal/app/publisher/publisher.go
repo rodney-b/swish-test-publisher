@@ -124,7 +124,7 @@ func publish(ctx context.Context, cp config.ConfigProvider, minioClient *minio.C
 
 				tel.IncrementMessageCounter(ctx, cp)
 
-				log.Info("Producing...", "line", string(lineBytes))
+				log.Debug("Producing...", "line", string(lineBytes))
 			}
 
 			if err = scanner.Err(); err != nil {
