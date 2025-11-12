@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "Mode 1 publishes data-set-1 @ 5 msg/s<br>Mode 2 publishes data-set-2 @ 10 msg/s<br>"
+        description: "Mode 1 publishes set 1 @ 5 msg/s. Mode 2 publishes set 2 @ 10 msg/s."
         required: true
         default: 1
         type: choice
